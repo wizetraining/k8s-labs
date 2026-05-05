@@ -57,7 +57,7 @@ kubectl get pods --all-namespaces
 L'approche **impérative** consiste à donner des ordres directs via la ligne de commande (`run`, `create`, `delete`). C'est idéal pour des tests rapides.
 
 **1. Lancer un serveur Web**
-Lancez un Pod nommé `webserver` utilisant l'image `nginx:latest`. (Si vous rencontrez des limitations, utilisez l'image `public.ecr.aws/w1t1o1o1/nginx:latest`)
+Lancez un Pod nommé `webserver` utilisant l'image `nginx:latest`. (Si vous rencontrez des limitations, utilisez l'image `public.ecr.aws/wizetraining/nginx:latest`)
 Une fois créé, trouvez les informations suivantes :
 
   * Sur quel nœud a-t-il été déployé ?
@@ -84,7 +84,7 @@ kubectl describe pod webserver
 **2. Isolation via Namespace**
 Créez un namespace nommé `k8s-lab`.
 Ensuite, lancez un Pod nommé `tools` utilisant l'image `busybox` dans ce namespace. Ce pod devra exécuter la commande `sleep 1000` pour rester en vie.
-(Si vous rencontrez des limitations, utilisez l'image `public.ecr.aws/w1t1o1o1/busybox:latest`)
+(Si vous rencontrez des limitations, utilisez l'image `public.ecr.aws/wizetraining/busybox:latest`)
 
 <details><summary>Correction</summary>
 

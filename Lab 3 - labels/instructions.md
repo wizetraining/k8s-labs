@@ -38,7 +38,7 @@ Créez un fichier YAML nommé `nginx-labels.yaml` pour déployer un pod avec les
   * Image: `nginx`
   * Labels: `app: frontend`
 
-(Si vous rencontrez des limitations, utilisez l'image `public.ecr.aws/w1t1o1o1/nginx:latest`)
+(Si vous rencontrez des limitations, utilisez l'image `public.ecr.aws/wizetraining/nginx:latest`)
 
 <details><summary>Correction</summary>
 

@@ -15,7 +15,7 @@ Ce lab met en pratique la gestion des secrets, le déploiement d'une application
 
 **Prérequis :**
 
-L'image de l'application dans sa version Entreprise est : `public.ecr.aws/w1t1o1o1/webapp-count-secure:v1` (disponible sur un registre d'images public AWS ECR)
+L'image de l'application dans sa version Entreprise est : `public.ecr.aws/wizetraining/webapp-count-secure:v1` (disponible sur un registre d'images public AWS ECR)
 
 <details>
 <summary>Voir le code de l'application (Version Entreprise) Ici : </summary>
@@ -296,7 +296,7 @@ spec:
 </details>
 
 2. Appliquez la configuration et mettez à jour le déploiement `webapp-deployment`. 
-* Changez l'image pour utiliser la nouvelle version `public.ecr.aws/w1t1o1o1/webapp-count-secure:v1` 
+* Changez l'image pour utiliser la nouvelle version `public.ecr.aws/wizetraining/webapp-count-secure:v1` 
 * chargez les variables d'environnement ainsi que le volume nécessaires pour que l'application se connecte bien à notre nouvelle base de données.
 
 _**Astuce :** Analysez le code `app.py` et voyez les variables d'environnements attendues (`PG_HOST`, `PG_PORT`, `PG_USER`, `PG_DB`) et surtout où l'application cherche le fichier contenant le mot de passe (`PG_PASSWORD_FILE`)._
@@ -321,7 +321,7 @@ spec:
     spec:
       containers:
       - name: webapp
-        image: public.ecr.aws/w1t1o1o1/webapp-count-secure:v1
+        image: public.ecr.aws/wizetraining/webapp-count-secure:v1
         ports:
         - containerPort: 5000
         env:
