@@ -272,7 +272,7 @@ spec:
     spec:
       containers:
       - name: postgres
-        image: postgres:18-alpine
+        image: postgres:16-alpine
         ports:
         - containerPort: 5432
         env:
@@ -285,6 +285,7 @@ spec:
         volumeMounts:
         - name: postgres-data
           mountPath: /var/lib/postgresql/data
+          subPath: postgres
   volumeClaimTemplates:
   - metadata:
       name: postgres-data
@@ -413,7 +414,7 @@ Maintenant que Kubernetes "comprend" ce qu'est un cluster PostgreSQL grâce à l
 
 * Nom du cluster : `pg-database`
 * Instances : 3 (1 Primaire et 2 Répliques pour la Haute Disponibilité)
-* Image : `ghcr.io/cloudnative-pg/postgresql:15-alpine`
+* Image : `ghcr.io/cloudnative-pg/postgresql:16-alpine`
 * Stockage : `1Gi`
 * Sécurité : Utilisation du secret `pg-secret` créé en Partie 1.
 
@@ -427,7 +428,7 @@ metadata:
   name: pg-database
 spec:
   instances: 3 # L'opérateur va créer 3 pods et gérer la réplication
-  imageName: ghcr.io/cloudnative-pg/postgresql:15-alpine
+  imageName: ghcr.io/cloudnative-pg/postgresql:16-alpine
   
   # Configuration du stockage (PVC gérés automatiquement)
   storage:
