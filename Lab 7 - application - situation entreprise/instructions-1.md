@@ -386,7 +386,10 @@ Contrairement au StatefulSet manuel qui est limité comme nous l'avons vu dans l
 ### 1. Installation de l'Opérateur CloudNativePG avec Helm
 
 Avant de pouvoir demander un cluster PostgreSQL, nous devons installer l'intelligence qui va le gérer.
-Nous utiliserons Helm pour l'installation 
+Nous utiliserons Helm pour l'installation.
+Voir la documentation ici : [https://cloudnative-pg.io/docs](https://cloudnative-pg.io/docs)
+
+Installation avec Helm : https://github.com/cloudnative-pg/charts
 
 ```bash
 # 1. Ajouter le dépôt officiel de CloudNativePG
@@ -402,7 +405,6 @@ helm upgrade --install cnpg-operator cnpg/cloudnative-pg \
   --create-namespace
 ```
 
-
 **Vérification :** Attendez que le pod de l'opérateur soit en état `Running`.
 ```bash
 kubectl get pods -n cnpg-system
@@ -410,13 +412,25 @@ kubectl get pods -n cnpg-system
 
 ### 2. Déploiement du Cluster PostgreSQL (Custom Resource)
 
-Maintenant que Kubernetes "comprend" ce qu'est un cluster PostgreSQL grâce à l'opérateur, nous n'avons plus besoin de gérer des StatefulSets complexes. Nous déclarons simplement notre besoin via l'objet `Cluster`.
+Maintenant que Kubernetes "comprend" ce qu'est un cluster PostgreSQL grâce à l'opérateur, nous n'avons plus besoin de gérer des StatefulSets complexes. Nous déclarons simplement notre besoin via l'objet (un Custom Ressource) : `Cluster`.
 
+Vous pouvez consulter la Doc pour voir comment on bootstrap un nouveau cluster : https://cloudnative-pg.io/documentation/1.19/bootstrap/
+
+Bootstraper un Cluster PostgreSQL avec les éléments suivants :
 * Nom du cluster : `pg-database`
 * Instances : 3 (1 Primaire et 2 Répliques pour la Haute Disponibilité)
-* Image : `ghcr.io/cloudnative-pg/postgresql:16-alpine`
+* Image : `ghcr.io/cloudnative-pg/postgresql:16`
 * Stockage : `1Gi`
 * Sécurité : Utilisation du secret `pg-secret` créé en Partie 1.
+
+Comme vous pouvez le lire dans la documentation, l'operator a besoin d'un secret de type `kubernetes.io/basic-auth`avec ces deux clés : `username` et `password`. Pour ce faire, vous pouvez créer un nouveau secret ou mettre à jour le secret précédent
+
+```bash
+# Création d'un nouveau
+kubectl create secret generic pg-secret-2 \
+  --from-literal=username=app_user \
+  --from-file=password=./secrets/pg_password.txt
+```
 
 <details>
 <summary>Correction : Manifeste postgres-cluster.yaml</summary>
@@ -428,7 +442,7 @@ metadata:
   name: pg-database
 spec:
   instances: 3 # L'opérateur va créer 3 pods et gérer la réplication
-  imageName: ghcr.io/cloudnative-pg/postgresql:16-alpine
+  imageName: ghcr.io/cloudnative-pg/postgresql:16
   
   # Configuration du stockage (PVC gérés automatiquement)
   storage:
@@ -440,7 +454,7 @@ spec:
       database: app_db
       owner: app_user
       secret:
-        name: pg-secret # Le secret créé en Partie 1
+        name: pg-secret-2 # Le secret créé en Partie 1 mis à jour ou le nouveau secret 
 ```
 </details>
 
@@ -453,6 +467,9 @@ kubectl apply -f postgres-cluster.yaml
 
 # Observer l'opérateur travailler (il va créer les PVC, puis les Pods un par un)
 kubectl get pod -w
+
+# Observer le Custom Resource Cluster
+kubectl get cluster
 ```
 </details>
 
@@ -487,11 +504,19 @@ kubectl get svc webapp-service
 ```
 
 2. **Simuler une panne majeure :**
-Supprimez le pod qui fait office de "Primaire" (celui qui a le rôle master).
+Supprimez le pod qui fait office de "Primaire" (celui qui a le rôle Primary/Master).
+
 ```bash
 # Identifier le primaire
 kubectl get pods -l cnpg.io/cluster=pg-database --show-labels
+
+# pour le lister lui seul
+kubectl get pods -l cnpg.io/instanceRole=primary
+
 # Supprimer le pod primaire
+kubectl delete pods -l cnpg.io/instanceRole=primary --grace-period 0 --force
+
+# Ou simplement
 kubectl delete pod pg-database-1 # (remplacez par le nom du primaire actuel)
 ```
 
