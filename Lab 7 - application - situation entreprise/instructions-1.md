@@ -211,6 +211,7 @@ echo -n "PostgresSuperPassword123" > secrets/pg_password.txt
 * La clé à l'intérieur du secret (`password`) correspondra au nom du fichier.
 * Quel commande pour vérifier le contenu ?
 
+<details>
 <summary>Correction : Commande Secret</summary>
 
 ```bash
