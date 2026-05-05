@@ -204,7 +204,7 @@ Pour les applications avec état comme les bases de données, un **StatefulSet**
 
 1. Créez le manifeste `postgres-statefulset.yaml` :
 * Nom : `postgres-statefulset`
-* Image : `postgres:18-alpine`
+* Image : `postgres:16-alpine`
 * Port : `5432`
 * Variable d'env obligatoire : `POSTGRES_PASSWORD=postgres`
 * volumeClaimTemplates : `1GB`, `rwo`
@@ -231,7 +231,7 @@ spec:
     spec:
       containers:
       - name: postgres
-        image: postgres:18-alpine
+        image: postgres:16-alpine
         ports:
         - containerPort: 5432
         env:
@@ -240,6 +240,7 @@ spec:
         volumeMounts:
         - name: postgres-data
           mountPath: /var/lib/postgresql/data
+          subPath: postgres
   volumeClaimTemplates:
   - metadata:
       name: postgres-data

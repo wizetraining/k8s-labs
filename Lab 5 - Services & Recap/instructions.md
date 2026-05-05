@@ -7,7 +7,7 @@ Cet atelier vous guidera à travers les concepts fondamentaux de Kubernetes, de 
 * `kubectl` configuré pour communiquer avec votre cluster.
 
 L'image Docker `wizetraining/webapp-count:v1` est disponible sur Docker Hub. 
-* Si vous rencontrez des limitations, utilisez `public.ecr.aws/wizetraining/webapp-count:v1` ou `public.ecr.aws/wizetraining/postgres:18-alpine`, ou `public.ecr.aws/wizetraining/webapp-count:v2`
+* Si vous rencontrez des limitations, utilisez `public.ecr.aws/wizetraining/webapp-count:v1` ou `public.ecr.aws/wizetraining/postgres:16-alpine`, ou `public.ecr.aws/wizetraining/webapp-count:v2`
 
 Le code de l'application est ci-dessous :
 
@@ -364,7 +364,7 @@ spec:
 
 
 3. Créez les manifestes pour PostgreSQL (`postgres-deployment.yaml`, `postgres-service.yaml`) :
-* Un deployment PostgreSQL, `replicas` : 1 , image : `postgres:18-alpine`
+* Un deployment PostgreSQL, `replicas` : 1 , image : `postgres:16-alpine`
 * Attention : PostgreSQL nécessite la variable d'environnement `POSTGRES_PASSWORD` pour démarrer (donnez-lui la valeur `postgres` pour correspondre à notre code Python).
 * Un service qui expose PostgreSQL sur le port du conteneur `5432`
 * Quel nom avez-vous donné au Service ? Pourquoi ?
@@ -390,7 +390,7 @@ spec:
     spec:
       containers:
       - name: postgres
-        image: postgres:18-alpine
+        image: postgres:16-alpine
         ports:
         - containerPort: 5432
         env:
